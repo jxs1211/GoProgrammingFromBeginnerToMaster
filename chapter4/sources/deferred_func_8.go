@@ -1,6 +1,8 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
 func foo1() {
 	sl := []int{1, 2, 3}
@@ -11,6 +13,7 @@ func foo1() {
 	sl = []int{3, 2, 1}
 	_ = sl
 }
+
 func foo2() {
 	sl := []int{1, 2, 3}
 	defer func(p *[]int) {

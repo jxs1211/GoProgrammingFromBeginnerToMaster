@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"image"
 	_ "image/gif"
+
 	_ "image/jpeg"
 	_ "image/png"
 	"os"
@@ -20,7 +21,10 @@ func main() {
 }
 
 func imageSize(imageFile string) (int, int, error) {
-	f, _ := os.Open(imageFile)
+	f, err := os.Open(imageFile)
+	if err != nil {
+		return 0, 0, err
+	}
 	defer f.Close()
 
 	img, _, err := image.Decode(f)

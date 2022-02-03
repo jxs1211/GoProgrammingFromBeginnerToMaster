@@ -6,19 +6,19 @@ import (
 )
 
 func concat(a, b int) string {
-	return fmt.Printf("%d %d", a, b)
+	return fmt.Sprintf("%d %d", a, b)
 }
 
-func concat(x, y string) string {
+func concatTwo(x, y string) string {
 	return x + " " + y
 }
 
-func concat(s []string) string {
+func concatSlice(s []string) string {
 	return strings.Join(s, " ")
 }
 
 func main() {
 	println(concat(1, 2))
-	println(concat("hello", "gopher"))
-	println(concat([]string{"hello", "gopher", "!"}))
+	println(concatTwo("hello", "gopher"))
+	println(concatSlice([]string{"hello", "gopher", "!"}))
 }

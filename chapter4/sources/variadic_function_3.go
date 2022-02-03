@@ -9,7 +9,8 @@ func foo(b ...byte) {
 func main() {
 	b := []byte{}
 	b = append(b, "hello"...)
-	fmt.Println(string(b))
+	fmt.Printf("%b\n%o\n%d\n0x%x\n%s\n", b, b, b, b, b)
 
-	foo("hello"...)
+	foo(b...)
+	// foo("hello")
 }

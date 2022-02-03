@@ -23,6 +23,7 @@ func main() {
 		fmt.Println(k, v)
 	}
 	fmt.Println("counter is ", counter)
+	fmt.Println("final:", m)
 	fmt.Println("\n")
 
 	m["tony"] = 21
@@ -36,4 +37,5 @@ func main() {
 		fmt.Println(k, v)
 	}
 	fmt.Println("counter is ", counter)
+	fmt.Println("final:", m)
 }

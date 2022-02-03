@@ -33,14 +33,33 @@ func getANumToChannel() int {
 	return 2
 }
 
-func main() {
+func Show() {
 	select {
 	//recv from channel
 	case (getASlice())[0] = <-getAReadOnlyChannel():
 		fmt.Println("recv something from a readonly channel")
+		fmt.Println(getASlice())
 
 	//send to channel
 	case getAWriteOnlyChannel() <- getANumToChannel():
 		fmt.Println("send something to a writeonly channel")
 	}
+}
+
+func Show2(i int) {
+	switch i {
+	case 1:
+		fmt.Println(1)
+		fallthrough
+	case 2:
+		fmt.Println(2)
+		fallthrough
+	default:
+		fmt.Println(-1)
+	}
+}
+
+func main() {
+	i := 1
+	Show2(i)
 }

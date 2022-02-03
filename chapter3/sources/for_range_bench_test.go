@@ -2,42 +2,45 @@ package array_test
 
 import "testing"
 
-var a [100]int
+var a [10000]int
 var sl = a[:]
 
-func arrayRangeLoop() {
+func arrayLoop() {
+
 	var sum int
-	for _, n := range a {
-		sum += n
+	for _, v := range a {
+		sum += v
 	}
 }
 
-func pointerToArrayRangeLoop() {
+func arrayPointLoop() {
 	var sum int
-	for _, n := range &a {
-		sum += n
+	for _, v := range &a {
+		sum += v
 	}
 }
 
-func sliceRangeLoop() {
+func arraySliceLoop() {
 	var sum int
-	for _, n := range sl {
-		sum += n
+	for _, v := range sl {
+		sum += v
 	}
 }
 
-func BenchmarkArrayRangeLoop(b *testing.B) {
+func BenchmarkArrayLoop(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		arrayRangeLoop()
+		arrayLoop()
 	}
 }
-func BenchmarkPointerToArrayRangeLoop(b *testing.B) {
+
+func BenchmarkArrayPointLoop(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		pointerToArrayRangeLoop()
+		arrayPointLoop()
 	}
 }
-func BenchmarkSliceRangeLoop(b *testing.B) {
+
+func BenchmarkArraySliceLoop(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		sliceRangeLoop()
+		arraySliceLoop()
 	}
 }

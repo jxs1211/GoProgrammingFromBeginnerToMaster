@@ -1,5 +1,10 @@
 package main
 
+import (
+	"fmt"
+	"reflect"
+)
+
 type T1 struct{}
 
 func (T1) T1M1()   { println("T1's M1") }
@@ -15,6 +20,23 @@ func (*T2) PT2M3() { println("PT2's M3") }
 type T struct {
 	T1
 	*T2
+}
+
+func DumpMethodSet(i interface{}) {
+	v := reflect.TypeOf(i)
+	elemTyp := v.Elem()
+
+	n := elemTyp.NumMethod()
+	if n == 0 {
+		fmt.Printf("%s's method set is empty!\n", elemTyp)
+		return
+	}
+
+	fmt.Printf("%s's method set:\n", elemTyp)
+	for j := 0; j < n; j++ {
+		fmt.Println("-", elemTyp.Method(j).Name)
+	}
+	fmt.Printf("\n")
 }
 
 func main() {

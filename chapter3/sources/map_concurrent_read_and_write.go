@@ -31,9 +31,10 @@ func main() {
 
 	go func() {
 		for i := 0; i < 1000; i++ {
-			doWrite(m)
+			doIteration(m)
 		}
 	}()
-
+	p := m[1]
+	fmt.Println(p)
 	time.Sleep(5 * time.Second)
 }

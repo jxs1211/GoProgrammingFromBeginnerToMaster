@@ -1,18 +1,33 @@
 package main
 
-func sum(args ...int) int {
-	var total int
+import "fmt"
 
-	for _, v := range args {
-		total += v
+func sums(ints ...int) int {
+	sum := 0
+	for _, v := range ints {
+		sum += v
 	}
+	return sum
+}
 
-	return total
+func dump2(args ...interface{}) {
+	for _, v := range args {
+		fmt.Println(v)
+	}
+}
+
+func Show() {
+	s := []int{1, 2, 3}
+	fmt.Println(sums(s...))
+	fmt.Println(sums(4, 5, 6))
+}
+
+func Show2() {
+	s := []interface{}{1, 2, 3}
+	dump2(s...)
 }
 
 func main() {
-	a, b, c := 1, 2, 3
-	println(sum(a, b, c))
-	nums := []int{4, 5, 6}
-	println(sum(nums...))
+	// Show()
+	Show2()
 }
