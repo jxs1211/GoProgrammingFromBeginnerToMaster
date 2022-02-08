@@ -10,6 +10,14 @@ func add(a, b int) int {
 	return a + b
 }
 
+type I interface {
+	M1()
+}
+
+type I2 interface {
+	M1()
+}
+
 func dummy() {
 	add(3, 5)
 }

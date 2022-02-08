@@ -1,6 +1,9 @@
 package main
 
-import "time"
+import (
+	"os/signal"
+	"time"
+)
 
 func worker(args ...interface{}) {
 	if len(args) == 0 {
@@ -24,8 +27,11 @@ func spawn(f func(args ...interface{}), args ...interface{}) chan struct{} {
 }
 
 func main() {
+	// comment
 	done := spawn(worker, 5)
 	println("spawn a worker goroutine")
 	<-done
 	println("worker done")
+
+	signal.Notify
 }

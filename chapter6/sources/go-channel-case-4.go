@@ -16,7 +16,7 @@ LOOP:
 		default:
 			// 模拟worker工作
 			time.Sleep(1 * time.Second)
-
+			fmt.Printf("worker[%d] record working", i)
 		case <-quit:
 			break LOOP
 		}
@@ -31,9 +31,9 @@ func spawnGroup(f func(int, <-chan signal), num int, groupSignal <-chan signal) 
 	for i := 0; i < num; i++ {
 		wg.Add(1)
 		go func(i int) {
+			defer wg.Done()
 			fmt.Printf("worker %d: start to work...\n", i)
 			f(i, groupSignal)
-			wg.Done()
 		}(i + 1)
 	}
 

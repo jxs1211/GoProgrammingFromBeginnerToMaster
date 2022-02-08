@@ -18,6 +18,7 @@ func newNumGenerator(start, count int) <-chan int {
 }
 
 func filterOdd(in int) (int, bool) {
+	time.Sleep(time.Microsecond * 1000)
 	if in%2 != 0 {
 		return 0, false
 	}
@@ -62,10 +63,11 @@ func spawnGroup(name string, num int, f func(int) (int, bool), in <-chan int) <-
 		for _, out := range outSlice {
 			wg.Add(1)
 			go func(out <-chan int) {
+				defer wg.Done()
 				for v := range out {
 					groupOut <- v
 				}
-				wg.Done()
+
 			}(out)
 		}
 		wg.Wait()
@@ -75,13 +77,23 @@ func spawnGroup(name string, num int, f func(int) (int, bool), in <-chan int) <-
 	return groupOut
 }
 
+// pipline
+//   1     newNumGenerator
+// 1 1 1   filterOdd
+//  1 1    square
+//   1     out
+//
+
 func main() {
-	in := newNumGenerator(1, 20)
-	out := spawnGroup("square", 2, square, spawnGroup("filterOdd", 3, filterOdd, in))
+	start := time.Now()
+
+	in := newNumGenerator(1, 1000)
+	out := spawnGroup("square", 30, square, spawnGroup("filterOdd", 30, filterOdd, in))
 
 	time.Sleep(3 * time.Second)
 
 	for v := range out {
 		fmt.Println(v)
 	}
+	println("elasped: ", time.Since(start)/1000000)
 }

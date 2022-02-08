@@ -1,5 +1,5 @@
-module github.com/bigwhite/mail
+module github.com/jxs1211/email
 
-go 1.13
+go 1.17
 
-require github.com/jordan-wright/email v0.0.0-20190819015918-041e0cec78b0
+require github.com/jordan-wright/email v4.0.1-0.20210109023952-943e75fe5223+incompatible
