@@ -5,7 +5,6 @@ func newNumGenerator(start, count int) <-chan int {
 	go func() {
 		for i := start; i < start+count; i++ {
 			c <- i
-			// println("newNumGenerator:", i)
 		}
 		close(c)
 	}()
@@ -21,13 +20,6 @@ func filterOdd(in int) (int, bool) {
 
 func square(in int) (int, bool) {
 	return in * in, true
-}
-
-func filterOver100(in int) (int, bool) {
-	if in >= 100 {
-		return 0, false
-	}
-	return in, true
 }
 
 func spawn(f func(int) (int, bool), in <-chan int) <-chan int {
@@ -48,10 +40,9 @@ func spawn(f func(int) (int, bool), in <-chan int) <-chan int {
 
 func main() {
 	in := newNumGenerator(1, 20)
-	out := spawn(filterOver100, spawn(square, spawn(filterOdd, in)))
+	out := spawn(square, spawn(filterOdd, in))
 
 	for v := range out {
 		println(v)
-		// println("main:", v)
 	}
 }

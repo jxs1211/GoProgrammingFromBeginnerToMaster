@@ -36,3 +36,19 @@ func DumpMethodSet(i interface{}) {
 	}
 	fmt.Printf("\n")
 }
+
+func DumpMethodSet2(i interface{}) {
+	ty := reflect.TypeOf(i)
+	elemType := ty.Elem()
+	n := elemType.NumMethod()
+	if n == 0 {
+		fmt.Printf("%v's method set is empty\n", elemType)
+		return
+	}
+	fmt.Printf("%v's method set：\n", elemType)
+	for i := 0; i < n; i++ {
+		m := elemType.Method(i).Name
+		fmt.Println("- ", m)
+	}
+	fmt.Printf("\n")
+}

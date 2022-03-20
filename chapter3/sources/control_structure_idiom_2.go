@@ -81,9 +81,73 @@ func sliceLenChangeRangeExpression() {
 	fmt.Println("a = ", a)
 }
 
+func arrayRangeExpression2() {
+	a := [4]int{1, 2, 3, 4}
+	fmt.Println("a: ", a)
+	var r [4]int
+	for i, v := range a {
+		if i == 0 {
+			a[1] = 22
+			a[2] = 33
+		}
+		r[i] = v
+	}
+	fmt.Println("r: ", r)
+	fmt.Println("a: ", a)
+}
+
+func pointerToArrayRangeExpression2() {
+	a := [4]int{1, 2, 3, 4}
+	fmt.Println("a: ", a)
+	var r [4]int
+	for i, v := range &a {
+		if i == 0 {
+			a[1] = 22
+			a[2] = 33
+		}
+		r[i] = v
+	}
+	fmt.Println("r: ", r)
+	fmt.Println("a: ", a)
+}
+
+func sliceRangeExpression2() {
+	a := []int{1, 2, 3, 4}
+	fmt.Println("a: ", a)
+	var r []int
+	for i, v := range a {
+		if i == 0 {
+			a[1] = 22
+			a[2] = 33
+		}
+		r = append(r, v)
+	}
+	fmt.Println("r: ", r)
+	fmt.Println("a: ", a)
+}
+
+func sliceLenChangeRangeExpression2() {
+	a := []int{1, 2, 3, 4}
+	fmt.Println("a: ", a)
+	var r []int
+	for i, v := range a { // the a' underlying strut's length is 4 when copying
+		if i == 0 {
+			a = append(a, 5)
+			a = append(a, 6)
+		}
+		r = append(r, v)
+	}
+	fmt.Println("r: ", r)
+	fmt.Println("a: ", a)
+}
+
 func main() {
-	arrayRangeExpression()
-	pointerToArrayRangeExpression()
-	sliceRangeExpression()
-	sliceLenChangeRangeExpression()
+	arrayRangeExpression2()
+	pointerToArrayRangeExpression2()
+	sliceRangeExpression2()
+	sliceLenChangeRangeExpression2()
+	// arrayRangeExpression()
+	// pointerToArrayRangeExpression()
+	// sliceRangeExpression()
+	// sliceLenChangeRangeExpression()
 }

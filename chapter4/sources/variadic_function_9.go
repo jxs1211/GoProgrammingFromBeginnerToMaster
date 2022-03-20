@@ -1,71 +1,6 @@
 package main
 
-import (
-	"fmt"
-)
-
-type Room struct {
-	style         int
-	airCondition  bool
-	floorMaterial string
-}
-
-type Option2 func(*Room)
-
-func SetStyle(style int) Option2 {
-	return func(r *Room) {
-		r.style = style
-	}
-}
-
-func SetAirCondition(isNeed bool) Option2 {
-	return func(r *Room) {
-		r.airCondition = isNeed
-	}
-}
-
-func SetFloorMaterial(material string) Option2 {
-	return func(r *Room) {
-		r.floorMaterial = material
-	}
-}
-
-func NewRoom(options ...Option2) *Room {
-	r := &Room{
-		style:         0,
-		airCondition:  true,
-		floorMaterial: "wall paper",
-	}
-
-	for _, option := range options {
-		option(r)
-	}
-
-	return r
-}
-
-func Show2() {
-	fmt.Printf("%#v\n", NewRoom()) // default room
-	fmt.Printf("%#v\n", NewRoom(
-		SetStyle(1),
-		SetAirCondition(true),
-		SetFloorMaterial("ground-tile"),
-	)) // custom room
-}
-
-func main() {
-	// Show()
-	Show2()
-}
-
-func Show() {
-	fmt.Printf("%+v\n", NewFinishedHouse()) // use default options
-	fmt.Printf("%+v\n", NewFinishedHouse(
-		WithStyle(1),
-		WithFloorMaterial("ground-tile"),
-		WithCentralAirConditioning(false)),
-	)
-}
+import "fmt"
 
 type FinishedHouse struct {
 	style                  int    // 0: Chinese, 1: American, 2: European
@@ -114,4 +49,11 @@ func WithCentralAirConditioning(centralAirConditioning bool) Option {
 	return func(h *FinishedHouse) {
 		h.centralAirConditioning = centralAirConditioning
 	}
+}
+
+func main() {
+	fmt.Printf("%+v\n", NewFinishedHouse()) // use default options
+	fmt.Printf("%+v\n", NewFinishedHouse(WithStyle(1),
+		WithFloorMaterial("ground-tile"),
+		WithCentralAirConditioning(false)))
 }

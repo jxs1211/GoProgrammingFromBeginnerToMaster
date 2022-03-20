@@ -2,7 +2,7 @@ package main
 
 import "fmt"
 
-func main() {
+func show() {
 	// 中文字符  Unicode CodePoint(码点)   UTF8编码
 	//  中		U+4E2D			E4B8AD
 	//  国		U+56FD			E59BBD
@@ -19,4 +19,22 @@ func main() {
 		}
 		fmt.Printf("%s => %X => %X\n", string(v), v, utf8Bytes)
 	}
+}
+
+func show2() {
+	s := "中国欢迎你"
+	r := []rune(s)
+	b := []byte(s)
+	for i := 0; i < len(r); i++ {
+		var utf8Bytes []byte
+		for j := i * 3; j < (i+1)*3; j++ {
+			utf8Bytes = append(utf8Bytes, b[j])
+		}
+		fmt.Printf("%s -> %X -> %X\n", string(r[i]), r[i], utf8Bytes)
+	}
+}
+
+func main() {
+	// show()
+	show2()
 }

@@ -29,5 +29,6 @@ func modifyString(s *string) {
 		p1 := &((*array)[i])
 		v := (*p1)
 		(*p1) = v + 1 //try to change the character
+		// (*array)[i] += 1
 	}
 }

@@ -24,11 +24,37 @@ func foo3() {
 	}
 }
 
-func main() {
+func foo11() {
+	for i := 0; i <= 3; i++ {
+		defer fmt.Println(i)
+	}
+}
+
+func foo12() {
+	for i := 0; i <= 3; i++ {
+		defer func(a int) {
+			fmt.Println(a)
+		}(i)
+	}
+}
+
+func foo13() {
+	for i := 0; i <= 3; i++ {
+		defer func() {
+			fmt.Println(i)
+		}()
+	}
+}
+
+func showWhenEvaluationWhenDeferRegistering() {
 	fmt.Println("foo1 result:")
-	foo1()
-	fmt.Println("\nfoo2 result:")
-	foo2()
-	fmt.Println("\nfoo3 result:")
-	foo3()
+	foo11()
+	fmt.Println("foo2 result:")
+	foo12()
+	fmt.Println("foo3 result:")
+	foo13()
+}
+
+func main() {
+	showWhenEvaluationWhenDeferRegistering()
 }

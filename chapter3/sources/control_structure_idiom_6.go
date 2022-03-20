@@ -5,19 +5,17 @@ import (
 	"time"
 )
 
-func ShowBreakAtWhere() {
+func showBreakStopWhere() {
 	exit := make(chan interface{})
 
 	go func() {
-		// loop:
 		for {
 			select {
 			case <-time.After(time.Second):
 				fmt.Println("tick")
 			case <-exit:
 				fmt.Println("exiting...")
-				// break loop
-				break // break outside the select, not the for
+				break
 			}
 		}
 		fmt.Println("exit!")
@@ -30,31 +28,65 @@ func ShowBreakAtWhere() {
 	time.Sleep(3 * time.Second)
 }
 
-func ShowLabelLoop() {
-	final_sl := [][]int{}
-outLoop:
-	for i := 0; i < 10; i++ {
-		sl := []int{}
-		fmt.Printf("sl len: %d sl cap: %d\n", len(sl), cap(sl))
-		for j := 0; j < 10; j++ {
-			if i >= 5 {
-				break outLoop
+func showBreakStopWhere2() {
+	exit := make(chan int)
+
+	go func() {
+	outloop:
+		for {
+			select {
+			case <-time.After(time.Second):
+				fmt.Println("tick2")
+				// outloop:
+				for {
+					select {
+					case <-time.After(time.Second):
+						fmt.Println("tick")
+					case <-exit:
+						fmt.Println("exiting")
+						break outloop // jump to outloop position to continue
+					}
+				}
 			}
-			if j >= 5 {
-				continue outLoop
-			}
-			// fmt.Printf("%d * %d = %d\n", i, j, i*j)
-			sl = append(sl, i*j)
 		}
-		fmt.Println(sl)
-		final_sl = append(final_sl, sl)
+	}()
+	time.Sleep(3 * time.Second)
+	exit <- 1
+	time.Sleep(3 * time.Second)
+}
+
+func showBreakAndContinueLabelWhere2() {
+	// find the first element which is larger than 5 in every group
+	sl := [][]int{
+		{1, 2, 3},
+		{4, 5, 6},
+		{7, 8, 9},
 	}
-	fmt.Println(final_sl)
+	r := make([]int, 0, 9)
+	for _, v := range sl {
+	outloop:
+		for _, e := range v {
+			if e > 5 {
+				r = append(r, e)
+				break outloop
+			}
+		}
+	}
+	fmt.Println(r)
+
+	for _, v := range sl {
+	label:
+		for _, e := range v {
+			if e > 5 {
+				r = append(r, e)
+				continue label
+			}
+		}
+	}
+	fmt.Println(r)
 }
 
 func main() {
-	// ShowLabelLoop()
-	sl := []int{}
-	sl = append(sl, 1)
-	fmt.Println(sl)
+	// showBreakStopWhere2()
+	showBreakAndContinueLabelWhere2()
 }

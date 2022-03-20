@@ -16,7 +16,7 @@ func (p *field) print() {
 func main() {
 	data1 := []*field{{"one"}, {"two"}, {"three"}}
 	for _, v := range data1 {
-		go (*field).print(v) // v.print()
+		go (*field).print(v)
 	}
 
 	data2 := []field{{"four"}, {"five"}, {"six"}}

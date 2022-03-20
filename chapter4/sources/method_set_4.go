@@ -1,10 +1,5 @@
 package main
 
-import (
-	"fmt"
-	"reflect"
-)
-
 type Interface1 interface {
 	M1()
 }
@@ -24,23 +19,7 @@ type Interface4 interface {
 	M2()
 }
 
-func DumpMethodSet(i interface{}) {
-	v := reflect.TypeOf(i)
-	elemTyp := v.Elem()
-
-	n := elemTyp.NumMethod()
-	if n == 0 {
-		fmt.Printf("%s's method set is empty!\n", elemTyp)
-		return
-	}
-
-	fmt.Printf("%s's method set:\n", elemTyp)
-	for j := 0; j < n; j++ {
-		fmt.Println("-", elemTyp.Method(j).Name)
-	}
-	fmt.Printf("\n")
-}
-
 func main() {
-	DumpMethodSet((*Interface3)(nil))
+	DumpMethodSet2((*Interface3)(nil))
+	DumpMethodSet2((*Interface4)(nil))
 }

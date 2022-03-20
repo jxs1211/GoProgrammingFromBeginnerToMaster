@@ -1,9 +1,6 @@
 package main
 
-import (
-	"fmt"
-	"reflect"
-)
+import "fmt"
 
 type T1 struct{}
 
@@ -22,24 +19,7 @@ type T struct {
 	*T2
 }
 
-func DumpMethodSet(i interface{}) {
-	v := reflect.TypeOf(i)
-	elemTyp := v.Elem()
-
-	n := elemTyp.NumMethod()
-	if n == 0 {
-		fmt.Printf("%s's method set is empty!\n", elemTyp)
-		return
-	}
-
-	fmt.Printf("%s's method set:\n", elemTyp)
-	for j := 0; j < n; j++ {
-		fmt.Println("-", elemTyp.Method(j).Name)
-	}
-	fmt.Printf("\n")
-}
-
-func main() {
+func showStructEmbedStruct() {
 	t := T{
 		T1: T1{},
 		T2: &T2{},
@@ -76,4 +56,82 @@ func main() {
 	DumpMethodSet(&t)
 	DumpMethodSet(&pt)
 
+}
+
+type Interface1 interface {
+	M1()
+	M2()
+	M3()
+}
+
+type S1 struct {
+}
+
+func (S1) M1() {
+	fmt.Println("S1 M1")
+}
+
+func (S1) M2() {
+	fmt.Println("S1 M2")
+}
+
+func (*S1) M3() {
+	fmt.Println("*S1 M3")
+}
+
+type Interface2 interface {
+	M4()
+	M5()
+	M6()
+}
+
+type S2 struct {
+}
+
+func (S2) M4() {
+	fmt.Println("S2 M4")
+}
+
+func (S2) M5() {
+	fmt.Println("S2 M5")
+}
+
+func (*S2) M6() {
+	fmt.Println("*S2 M6")
+}
+
+type Struct struct {
+	S1
+	*S2
+}
+
+func showStructEmbedStruct2() {
+	s := Struct{
+		S1: S1{},
+		S2: &S2{},
+	}
+	pts := &Struct{
+		S1: S1{},
+		S2: &S2{},
+	}
+	s.M1()
+	s.M2()
+	s.M3()
+	s.M4()
+	s.M5()
+	s.M6()
+	fmt.Printf("\n")
+	pts.M1()
+	pts.M2()
+	pts.M3()
+	pts.M4()
+	pts.M5()
+	pts.M6()
+
+	DumpMethodSet2(&s)
+	DumpMethodSet2(&pts)
+}
+
+func main() {
+	showStructEmbedStruct2()
 }

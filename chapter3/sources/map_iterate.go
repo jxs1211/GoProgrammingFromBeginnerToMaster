@@ -2,7 +2,7 @@ package main
 
 import "fmt"
 
-func main() {
+func showMapIteration() {
 	m := map[int]int{
 		1: 11,
 		2: 12,
@@ -14,4 +14,8 @@ func main() {
 		fmt.Printf("[%d, %d] ", k, v)
 	}
 	fmt.Printf("}\n")
+}
+
+func main() {
+	showMapIteration()
 }

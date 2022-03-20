@@ -14,7 +14,7 @@ type Interface1 interface {
 
 type T struct {
 	Interface
-	Interface1
+	// Interface1
 }
 
 func (T) M1() { println("T's M1") }

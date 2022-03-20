@@ -5,21 +5,6 @@ import (
 	"unsafe"
 )
 
-// type T int
-
-// func (t T) Error() string {
-// 	return "bad error"
-// }
-
-// type T2 int
-// type In interface {
-// 	String() string
-// }
-
-// func (t T2) String() string {
-// 	return fmt.Sprintf("%d", t)
-// }
-
 const ptrSize = unsafe.Sizeof(uintptr(0))
 
 type typeAlg struct {
@@ -92,13 +77,10 @@ func dumpEface(i interface{}) {
 		// dump data
 		switch i.(type) {
 		case int:
-			println("i'type is int")
 			dumpInt(ptrToEface.data)
 		case float64:
-			println("i'type is float64")
 			dumpFloat64(ptrToEface.data)
 		case T:
-			println("i'type is T")
 			dumpT(ptrToEface.data)
 
 		// other cases ... ...
@@ -119,7 +101,6 @@ func dumpFloat64(dataOfEface unsafe.Pointer) {
 }
 
 func dumpItabOfIface(ptrToIface unsafe.Pointer) {
-	println("dumpItabOfIface")
 	p := (*iface)(ptrToIface)
 	fmt.Printf("iface: %+v\n", *p)
 
@@ -144,9 +125,8 @@ func dumpItabOfIface(ptrToIface unsafe.Pointer) {
 }
 
 func dumpDataOfIface(i interface{}) {
-	println("dumpDataOfIface")
 	// this is a trick as the data part of eface and iface are same
-	ptrToEface := (*iface)(unsafe.Pointer(&i))
+	ptrToEface := (*eface)(unsafe.Pointer(&i))
 
 	if ptrToEface.data != nil {
 		// dump data
@@ -157,8 +137,7 @@ func dumpDataOfIface(i interface{}) {
 			dumpFloat64(ptrToEface.data)
 		case T:
 			dumpT(ptrToEface.data)
-		case T2:
-			dumpT2(ptrToEface.data)
+
 		// other cases ... ...
 
 		default:
@@ -168,32 +147,7 @@ func dumpDataOfIface(i interface{}) {
 	fmt.Printf("\n")
 }
 
-func dumpT2(p unsafe.Pointer) {
-	var v = (*T2)(p)
-	fmt.Printf("\t %+v\n", *v)
-}
-
 func dumpT(dataOfIface unsafe.Pointer) {
 	var p *T = (*T)(dataOfIface)
 	fmt.Printf("\t data: %+v\n", *p)
 }
-
-// func dumpError(dataOfIface unsafe.Pointer) {
-// 	var p *error = (*error)(dataOfIface)
-// 	fmt.Printf("\t data: %+v\n", *p)
-// }
-
-// func main() {
-// 	var eif interface{} = T(5)
-// 	var err error = T(5)
-// 	println("eif:", eif)
-// 	println("err:", err)
-// 	println("eif = err:", eif == err)
-
-// 	dumpEface(eif)
-// 	dumpItabOfIface(unsafe.Pointer(&err))
-// 	dumpDataOfIface(err)
-
-// 	var err2 In = T2(5)
-// 	dumpDataOfIface(err2)
-// }

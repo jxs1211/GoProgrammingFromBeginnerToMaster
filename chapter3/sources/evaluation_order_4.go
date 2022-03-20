@@ -39,4 +39,6 @@ func main() {
 	}()
 
 	y[f()], _ = g(h(), i()+x[j()], <-c), k()
+	fmt.Println(y)
+	fmt.Println(x)
 }

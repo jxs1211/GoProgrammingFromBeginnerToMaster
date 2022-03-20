@@ -1,32 +1,29 @@
 package main
 
 import (
-	"fmt"
 	"io"
-	"reflect"
 )
 
-func DumpMethodSet(i interface{}) {
-	v := reflect.TypeOf(i)
-	elemTyp := v.Elem()
-
-	n := elemTyp.NumMethod()
-	if n == 0 {
-		fmt.Printf("%s's method set is empty!\n", elemTyp)
-		return
-	}
-
-	fmt.Printf("%s's method set:\n", elemTyp)
-	for j := 0; j < n; j++ {
-		fmt.Println("-", elemTyp.Method(j).Name)
-	}
-	fmt.Printf("\n")
-}
-
-func main() {
+func showInterfaceEmbeddingInterface() {
 	DumpMethodSet((*io.Writer)(nil))
 	DumpMethodSet((*io.Reader)(nil))
 	DumpMethodSet((*io.Closer)(nil))
 	DumpMethodSet((*io.ReadWriter)(nil))
 	DumpMethodSet((*io.ReadWriteCloser)(nil))
+}
+
+type MyInt int
+
+func showInterfaceEmbeddingInterface2() {
+	// i := 1
+	// i2 := MyInt(i)
+
+	DumpMethodSet2((*io.Reader)(nil))
+	DumpMethodSet2((*io.Writer)(nil))
+	DumpMethodSet2((*io.Closer)(nil))
+	DumpMethodSet2((*io.ReadWriteCloser)(nil))
+}
+
+func main() {
+	showInterfaceEmbeddingInterface2()
 }

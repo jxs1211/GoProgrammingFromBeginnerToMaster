@@ -26,8 +26,5 @@ func main() {
 	var i NonEmptyInterface
 	i = t
 	fmt.Println(ei)
-	println(ei)
 	fmt.Println(i)
-	println(i)
-	println("ei == i: ", ei == i)
 }

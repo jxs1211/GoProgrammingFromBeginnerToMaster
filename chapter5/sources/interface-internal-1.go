@@ -27,7 +27,6 @@ func returnsError() error {
 
 func main() {
 	e := returnsError()
-	println(e)
 	if e != nil {
 		fmt.Printf("error: %+v\n", e)
 		return

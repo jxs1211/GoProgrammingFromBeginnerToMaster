@@ -1,9 +1,6 @@
 package main
 
-import (
-	"strconv"
-	"time"
-)
+import "time"
 
 const (
 	idCheckTmCost   = 60
@@ -72,11 +69,7 @@ func newAirportSecurityCheckChannel(id string, queue <-chan struct{}) {
 					close(quit1)
 					close(quit2)
 					close(quit3)
-					t1, t2, t3 := <-result1, <-result2, <-result3
-					println(t1)
-					println(t2)
-					println(t3)
-					total := max(t1, t2, t3)
+					total := max(<-result1, <-result2, <-result3)
 					print("goroutine-", id, ": airportSecurityCheckChannel time cost:", total, "\n")
 					print("goroutine-", id, ": airportSecurityCheckChannel closed\n")
 					return
@@ -100,12 +93,10 @@ func max(args ...int) int {
 func main() {
 	passengers := 30
 	queue := make(chan struct{}, 30)
-	// newAirportSecurityCheckChannel("channel1", queue)
-	// newAirportSecurityCheckChannel("channel2", queue)
-	// newAirportSecurityCheckChannel("channel3", queue)
-	for i := 0; i < 3; i++ {
-		newAirportSecurityCheckChannel("channel"+strconv.Itoa(i+1), queue)
-	}
+	newAirportSecurityCheckChannel("channel1", queue)
+	newAirportSecurityCheckChannel("channel2", queue)
+	newAirportSecurityCheckChannel("channel3", queue)
+
 	time.Sleep(5 * time.Second) // 保证上述三个goroutine都已经处于ready状态
 	for i := 0; i < passengers; i++ {
 		queue <- struct{}{}

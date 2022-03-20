@@ -1,8 +1,9 @@
 package mail
 
 import (
-	"fmt"
 	"net/smtp"
+
+	email "github.com/jordan-wright/email"
 )
 
 const DISCLAIMER = `--------------------------------------------------------
@@ -13,15 +14,14 @@ func attachDisclaimer(content string) string {
 	return content + "\n\n" + DISCLAIMER
 }
 
-func attachDisclaimer2(s string) string {
-	return fmt.Sprintf("%s \n\n %s", s, DISCLAIMER)
-}
+func SendMailWithDisclaimer(subject, from string, to []string,
+	content string, mailserver string,
+	a smtp.Auth) error {
 
-type EmailSender interface {
-	Send(from, subject, text, mailserver string, to, bcc, cc []string, a smtp.Auth) error
-}
-
-func SendEmailWithDisclaimer2(sender EmailSender, subject, from, text, mailserver string,
-	to, bcc, cc []string, a smtp.Auth) error {
-	return sender.Send(from, subject, attachDisclaimer2(text), mailserver, to, bcc, cc, a)
+	e := email.NewEmail()
+	e.From = from
+	e.To = to
+	e.Subject = subject
+	e.Text = []byte(attachDisclaimer(content))
+	return e.Send(mailserver, a)
 }

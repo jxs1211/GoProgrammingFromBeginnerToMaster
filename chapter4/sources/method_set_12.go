@@ -1,5 +1,7 @@
 package main
 
+import "runtime"
+
 type T struct{}
 
 func (T) M1()  {}
@@ -14,6 +16,8 @@ type T1 = T
 type Interface1 = Interface
 
 func main() {
+
+	runtime.Breakpoint()
 	var t T
 	var pt *T
 	var t1 T1

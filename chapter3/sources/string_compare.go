@@ -21,7 +21,7 @@ func main() {
 
 	// > and >=
 	s1 = "12345"
-	s2 = "123"
+	s2 = "12346"
 	fmt.Println(s1 > s2)  // true
 	fmt.Println(s1 >= s2) // true
 }

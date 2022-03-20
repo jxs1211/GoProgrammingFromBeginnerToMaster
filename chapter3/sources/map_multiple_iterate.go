@@ -20,8 +20,4 @@ func main() {
 	for i := 0; i < 3; i++ {
 		doIteration(m)
 	}
-
-	for k, _ := range m {
-		fmt.Println("k: ", k)
-	}
 }

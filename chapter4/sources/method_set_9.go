@@ -24,3 +24,28 @@ func FemaleCount(s Stmt) (int, error) {
 
 	return result.Int(), nil
 }
+
+type Result2 struct {
+	count int
+}
+
+func (r Result2) Count() int {
+	return r.count
+}
+
+type Rows2 []struct{}
+
+type Stmt2 interface {
+	Exec(s string, args ...string) (Result2, error)
+	Close() error
+	NumInput() int
+	Query(args []string) (Rows2, error)
+}
+
+func MaleCount(s Stmt2) (int, error) {
+	r, err := s.Exec("select count(*) from male where gender=?", "1")
+	if err != nil {
+		return 0, err
+	}
+	return r.Count(), nil
+}

@@ -2,45 +2,63 @@ package array_test
 
 import "testing"
 
-var a [10000]int
+var a [100]int
 var sl = a[:]
 
-func arrayLoop() {
-
+func arrayRangeLoop() {
 	var sum int
-	for _, v := range a {
-		sum += v
+	for _, n := range a {
+		sum += n
 	}
 }
 
-func arrayPointLoop() {
+func pointerToArrayRangeLoop() {
 	var sum int
-	for _, v := range &a {
-		sum += v
+	for _, n := range &a {
+		sum += n
 	}
 }
 
-func arraySliceLoop() {
+func sliceRangeLoop() {
 	var sum int
-	for _, v := range sl {
-		sum += v
+	for _, n := range sl {
+		sum += n
 	}
 }
 
-func BenchmarkArrayLoop(b *testing.B) {
-	for i := 0; i < b.N; i++ {
-		arrayLoop()
+func arrayRangeLoop2() {
+	var a [100]int
+	for i, v := range a {
+		_, _ = i, v
 	}
 }
 
-func BenchmarkArrayPointLoop(b *testing.B) {
-	for i := 0; i < b.N; i++ {
-		arrayPointLoop()
+func pointerToArrayRangeLoop2() {
+	var a [100]int
+	for i, v := range &a {
+		_, _ = i, v
 	}
 }
 
-func BenchmarkArraySliceLoop(b *testing.B) {
+func sliceRangeLoop2() {
+	s := make([]int, 100)
+	for i, v := range s {
+		_, _ = i, v
+	}
+}
+
+func BenchmarkArrayRangeLoop(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		arraySliceLoop()
+		arrayRangeLoop()
+	}
+}
+func BenchmarkPointerToArrayRangeLoop(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		pointerToArrayRangeLoop()
+	}
+}
+func BenchmarkSliceRangeLoop(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		sliceRangeLoop()
 	}
 }

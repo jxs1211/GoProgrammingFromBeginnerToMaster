@@ -10,6 +10,7 @@ import "C"
 
 import (
 	"fmt"
+	"net/http"
 )
 
 func bar() {
@@ -28,4 +29,5 @@ func foo() {
 func main() {
 	foo()
 	fmt.Println("main exit normally")
+	http.ListenAndServe()
 }

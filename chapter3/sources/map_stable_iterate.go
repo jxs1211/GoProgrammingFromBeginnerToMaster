@@ -5,7 +5,7 @@ import "fmt"
 func doIteration(sl []int, m map[int]int) {
 	fmt.Printf("{ ")
 	for _, k := range sl {
-		v, ok := m[k] // keep the order
+		v, ok := m[k]
 		if !ok {
 			continue
 		}
@@ -14,7 +14,7 @@ func doIteration(sl []int, m map[int]int) {
 	fmt.Printf("}\n")
 }
 
-func main() {
+func showMapStableRead() {
 	var sl []int
 	m := map[int]int{
 		1: 11,
@@ -29,4 +29,29 @@ func main() {
 	for i := 0; i < 3; i++ {
 		doIteration(sl, m)
 	}
+}
+
+func showMapStableRead2() {
+	m := map[int]int{
+		1: 1,
+		2: 2,
+		3: 3,
+	}
+	s := make([]int, 0, len(m))
+	for k, _ := range m {
+		s = append(s, k)
+	}
+	fmt.Println(s)
+	for i := 0; i < 3; i++ {
+		fmt.Print("[")
+		for i := range s {
+			fmt.Printf(" %d, %d ", s[i], m[s[i]])
+		}
+		fmt.Println("]")
+	}
+}
+
+func main() {
+	// showMapStableRead2()
+	showMapStableRead()
 }

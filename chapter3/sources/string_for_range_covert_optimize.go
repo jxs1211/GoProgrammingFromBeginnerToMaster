@@ -8,7 +8,6 @@ import (
 func convert() {
 	s := "中国欢迎您，北京欢迎您"
 	sl := []byte(s)
-	fmt.Println(string(sl))
 	for _, v := range sl {
 		_ = v
 	}
@@ -21,6 +20,6 @@ func convertWithOptimize() {
 }
 
 func main() {
-	fmt.Println(testing.AllocsPerRun(1, convert))
-	// fmt.Println(testing.AllocsPerRun(1, convertWithOptimize))
+	fmt.Println(testing.AllocsPerRun(20, convert))
+	fmt.Println(testing.AllocsPerRun(20, convertWithOptimize))
 }

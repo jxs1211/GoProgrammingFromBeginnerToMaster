@@ -21,10 +21,10 @@ func spawnGroup(f func(i int), num int, groupSignal <-chan signal) <-chan signal
 	for i := 0; i < num; i++ {
 		wg.Add(1)
 		go func(i int) {
-			defer wg.Done()
 			<-groupSignal
 			fmt.Printf("worker %d: start to work...\n", i)
 			f(i)
+			wg.Done()
 		}(i + 1)
 	}
 
