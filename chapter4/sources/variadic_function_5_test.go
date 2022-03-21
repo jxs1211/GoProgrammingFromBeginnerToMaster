@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"strings"
+	"testing"
 	// "golang.org/x/text/cases"
 )
 
@@ -92,7 +93,12 @@ func showDefaultAndCustomVariable2() {
 		"hacker", 33))
 }
 
-func main() {
-	// showDefaultAndCustomVariable()
-	showDefaultAndCustomVariable2()
+func BenchmarkConcat2(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		concat2("-", "hello", 1, uint32(2),
+			[]int{11, 12, 13}, 17,
+			[]string{"robot", "ai", "ml"},
+			"hacker", 33,
+		)
+	}
 }

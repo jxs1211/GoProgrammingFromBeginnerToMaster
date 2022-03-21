@@ -51,9 +51,78 @@ func WithCentralAirConditioning(centralAirConditioning bool) Option {
 	}
 }
 
-func main() {
+func showFunctionalOption() {
 	fmt.Printf("%+v\n", NewFinishedHouse()) // use default options
 	fmt.Printf("%+v\n", NewFinishedHouse(WithStyle(1),
 		WithFloorMaterial("ground-tile"),
 		WithCentralAirConditioning(false)))
+
+}
+
+type Room struct {
+	f1 bool
+	f2 int
+	f3 string
+	f4 string
+}
+
+type Option2 func(*Room)
+
+func NewRoom(option ...Option2) *Room {
+	r := &Room{
+		f1: true,
+		f2: 1,
+		f3: "f3 default",
+		f4: "f4 default",
+	}
+
+	for _, op := range option {
+		op(r)
+	}
+	return r
+}
+
+func WithF1(b bool) Option2 {
+	return func(r *Room) {
+		r.f1 = b
+	}
+}
+
+func WithF2(i int) Option2 {
+	return func(r *Room) {
+		r.f2 = i
+	}
+}
+
+func WithF3(s string) Option2 {
+	return func(r *Room) {
+		r.f3 = s
+	}
+}
+
+func WithF4(s string) Option2 {
+	return func(r *Room) {
+		r.f4 = s
+	}
+}
+
+func showFunctionalOption2() {
+	r := NewRoom()
+	fmt.Printf("%+v\n", r)
+	r = NewRoom(
+		WithF1(false),
+		WithF2(2),
+	)
+	fmt.Printf("%+v\n", r)
+	r = NewRoom(
+		WithF1(false),
+		WithF2(2),
+		WithF3("f3 manual"),
+		WithF4("f4 manual"),
+	)
+	fmt.Printf("%+v\n", r)
+}
+
+func main() {
+	showFunctionalOption2()
 }
