@@ -80,9 +80,94 @@ func printEmptyInterfaceAndNonEmptyInterface() {
 	println("eif = err:", eif == err)
 }
 
-func main() {
+func printNilInterface2() {
+	var efa interface{}
+	var ifa error
+	println(efa)
+	println(ifa)
+
+	println("efa == nil:", efa == nil)
+	println("ifa == nil:", ifa == nil)
+	println("")
+}
+
+func printEmptyInterface2() {
+	var efa1 interface{}
+	var efa2 interface{}
+	m, n := 7, 8
+	efa1, efa2 = m, n
+	println("efa1:", efa1)
+	println("efa2:", efa2)
+	println("efa1 == efa2:", efa1 == efa2)
+
+	efa2 = 7
+	println("efa1:", efa1)
+	println("efa2:", efa2)
+	println("efa1 == efa2:", efa1 == efa2)
+
+	efa2 = int64(7)
+	println("efa1:", efa1)
+	println("efa2:", efa2)
+	println("efa1 == efa2:", efa1 == efa2)
+
+	println("")
+}
+
+type T2 int
+
+func (T2) Error() string {
+	return fmt.Sprintf("%d")
+}
+
+func printNonEmptyInterface2() {
+	var ifa1 error
+	var ifa2 error
+	ifa1 = (*T2)(nil)
+	println(ifa1)
+	println("ifa1 == nil", ifa1 == nil)
+
+	ifa1, ifa2 = T2(5), T2(6)
+	println("ifa1:", ifa1)
+	println("ifa2:", ifa2)
+	println("ifa1 == ifa2:", ifa1 == ifa2)
+
+	ifa2 = T2(5)
+	println("ifa1:", ifa1)
+	println("ifa2:", ifa2)
+	println("ifa1 == ifa2:", ifa1 == ifa2)
+
+	println("")
+}
+
+func printEmptyInterfaceAndNonEmptyInterface2() {
+	var efa interface{} = T2(5)
+	var ifa error = T2(5)
+	println("efa:", efa)
+	println("ifa:", ifa)
+	println("efa == ifa", efa == ifa)
+
+	ifa = T2(6)
+	println("efa:", efa)
+	println("ifa:", ifa)
+	println("efa == ifa", efa == ifa)
+
+	println("")
+}
+
+func showPrintlnEfaceAndIfaceExample() {
 	printNilInterface()
 	printEmptyInterface()
 	printNonEmptyInterface()
 	printEmptyInterfaceAndNonEmptyInterface()
+}
+
+func showPrintlnEfaceAndIfaceExample2() {
+	printNilInterface2()
+	printEmptyInterface2()
+	printNonEmptyInterface2()
+	printEmptyInterfaceAndNonEmptyInterface2()
+}
+
+func main() {
+	showPrintlnEfaceAndIfaceExample2()
 }

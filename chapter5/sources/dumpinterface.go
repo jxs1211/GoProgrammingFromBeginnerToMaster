@@ -7,7 +7,7 @@ import (
 
 const ptrSize = unsafe.Sizeof(uintptr(0))
 
-type typeAlg struct {
+type typeFlag struct {
 	hash  func(unsafe.Pointer, uintptr) uintptr
 	equal func(unsafe.Pointer, unsafe.Pointer) bool
 }
@@ -18,16 +18,21 @@ type typeOff int32
 
 type _type struct {
 	size       uintptr
-	ptrdata    uintptr
+	ptrdata    uintptr // size of memory prefix holding all pointers
 	hash       uint32
 	tflag      tflag
 	align      uint8
-	fieldalign uint8
+	fieldAlign uint8
 	kind       uint8
-	alg        *typeAlg
-	gcdata     *byte
-	str        nameOff
-	ptrToThis  typeOff
+	// function for comparing objects of this type
+	// (ptr to object A, ptr to object B) -> ==?
+	equal func(unsafe.Pointer, unsafe.Pointer) bool
+	// gcdata stores the GC type data for the garbage collector.
+	// If the KindGCProg bit is set in kind, gcdata is a GC program.
+	// Otherwise it is a ptrmask bitmap. See mbitmap.go for details.
+	gcdata    *byte
+	str       nameOff
+	ptrToThis typeOff
 }
 
 type imethod struct {
@@ -48,14 +53,9 @@ type interfacetype struct {
 type itab struct {
 	inter *interfacetype
 	_type *_type
-	hash  uint32
+	hash  uint32 // copy of _type.hash. Used for type switches.
 	_     [4]byte
-	fun   [1]uintptr
-}
-
-type eface struct {
-	_type *_type
-	data  unsafe.Pointer
+	fun   [1]uintptr // variable sized. fun[0]==0 means _type does not implement inter.
 }
 
 type iface struct {
@@ -63,42 +63,33 @@ type iface struct {
 	data unsafe.Pointer
 }
 
-// fit for go 1.13.x version
-func dumpEface(i interface{}) {
-	ptrToEface := (*eface)(unsafe.Pointer(&i))
-	fmt.Printf("eface: %+v\n", *ptrToEface)
+type eface struct {
+	_type *_type
+	data  unsafe.Pointer
+}
 
-	if ptrToEface._type != nil {
-		// dump _type info
-		fmt.Printf("\t _type: %+v\n", *(ptrToEface._type))
+func dumpEface(i interface{}) {
+	ptrEface := (*eface)(unsafe.Pointer(&i))
+
+	if ptrEface._type != nil {
+		fmt.Printf("\t type: %+v\n", *(ptrEface._type))
 	}
 
-	if ptrToEface.data != nil {
-		// dump data
+	if ptrEface.data != nil {
 		switch i.(type) {
 		case int:
-			dumpInt(ptrToEface.data)
+			dumpInt(ptrEface.data)
+		case T2:
+			dumpT2(ptrEface.data)
 		case float64:
-			dumpFloat64(ptrToEface.data)
-		case T:
-			dumpT(ptrToEface.data)
-
-		// other cases ... ...
+			dumpFloat64(ptrEface.data)
 		default:
-			fmt.Printf("\t data: unsupported type\n")
+			fmt.Println("unsupport type")
 		}
 	}
-	fmt.Printf("\n")
 }
 
-func dumpInt(dataOfEface unsafe.Pointer) {
-	var p *int = (*int)(dataOfEface)
-	fmt.Printf("\t data: %d\n", *p)
-}
-func dumpFloat64(dataOfEface unsafe.Pointer) {
-	var p *float64 = (*float64)(dataOfEface)
-	fmt.Printf("\t data: %f\n", *p)
-}
+// // fit for go 1.13.x version
 
 func dumpItabOfIface(ptrToIface unsafe.Pointer) {
 	p := (*iface)(ptrToIface)
@@ -126,7 +117,7 @@ func dumpItabOfIface(ptrToIface unsafe.Pointer) {
 
 func dumpDataOfIface(i interface{}) {
 	// this is a trick as the data part of eface and iface are same
-	ptrToEface := (*eface)(unsafe.Pointer(&i))
+	ptrToEface := (*iface)(unsafe.Pointer(&i))
 
 	if ptrToEface.data != nil {
 		// dump data
@@ -136,7 +127,7 @@ func dumpDataOfIface(i interface{}) {
 		case float64:
 			dumpFloat64(ptrToEface.data)
 		case T:
-			dumpT(ptrToEface.data)
+			dumpT2(ptrToEface.data)
 
 		// other cases ... ...
 
@@ -150,4 +141,16 @@ func dumpDataOfIface(i interface{}) {
 func dumpT(dataOfIface unsafe.Pointer) {
 	var p *T = (*T)(dataOfIface)
 	fmt.Printf("\t data: %+v\n", *p)
+}
+
+func dumpT2(p unsafe.Pointer) {
+	fmt.Printf("\t data: %+v\n", *(*T2)(p))
+}
+
+func dumpInt(p unsafe.Pointer) {
+	fmt.Printf("\t data: %v\n", *(*int)(p))
+}
+
+func dumpFloat64(p unsafe.Pointer) {
+	fmt.Printf("\t data: %v\n", *(*float64)(p))
 }
