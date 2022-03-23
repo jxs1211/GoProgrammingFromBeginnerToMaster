@@ -1,6 +1,10 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"io"
+	"net/http"
+)
 
 type Worker interface {
 	work()
@@ -61,4 +65,7 @@ func ShowCompareStructType() {
 func main() {
 	// ShowCompareStructType()
 	ShowCompareInterfaceType()
+	var errr error
+	var r io.Reader
+	h := http.Handler
 }
