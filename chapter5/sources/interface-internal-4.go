@@ -53,6 +53,9 @@ func showInterface2() {
 	fmt.Println(ii)
 }
 
+func add(a, b int) int {
+	return a + b
+}
 func main() {
 	showInterface2()
 }

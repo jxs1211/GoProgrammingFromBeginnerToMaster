@@ -4,6 +4,11 @@ import (
 	"strings"
 )
 
+type S struct {
+	name string `json:"name,omitempty" form:"name,omitempty" orm:"name,omitempty"`
+	age  int    `json:"age,omitempty" form:"age,omitempty" orm:"age,omitempty"`
+}
+
 func Split(s, sep string) (result []string) {
 	i := strings.Index(s, sep)
 
@@ -14,4 +19,30 @@ func Split(s, sep string) (result []string) {
 	}
 	result = append(result, s)
 	return
+}
+
+func Add(a, b int) int {
+	return a + b
+}
+
+type Learner interface {
+	Learn()
+	Speaker(s string) string
+}
+
+func (s *Student) Learn() {
+	panic("not implemented") // TODO: Implement
+}
+
+func (s *Student) Speaker(s string) string {
+	panic("not implemented") // TODO: Implement
+}
+
+func ExtractFuncTest(a, b, c int) {
+	if a > 0 {
+	}
+	if b > 0 {
+	}
+	if c > 0 {
+	}
 }
