@@ -14,8 +14,8 @@ func bar(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	http.HandleFunc("/", greetings)
-	http.HandleFunc("/bar", bar)
-	http.ListenAndServe(":8080", nil)
-	// http.ListenAndServe(":8080", http.HandlerFunc(greetings))
+	// http.HandleFunc("/", greetings)
+	// http.HandleFunc("/bar", bar)
+	// http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(":8080", http.HandlerFunc(greetings))
 }

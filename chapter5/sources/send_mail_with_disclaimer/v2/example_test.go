@@ -26,8 +26,8 @@ func ExampleSendMailWithDisclaimer() {
 		e: email.NewEmail(),
 	}
 	err := mail.SendMailWithDisclaimer(adapter, "gopher mail test v2",
-		"YOUR_MAILBOX",
-		[]string{"DEST_MAILBOX"},
+		"test@gmail.com",
+		[]string{"test@gmail.com"},
 		"hello, gopher",
 		"smtp.163.com:25",
 		smtp.PlainAuth("", "YOUR_EMAIL_ACCOUNT", "YOUR_EMAIL_PASSWD!", "smtp.163.com"))
