@@ -143,8 +143,49 @@ func showFileOperation2() {
 	fmt.Println("write ok")
 }
 
+// $GOROOT/src/bytes/buffer.go
+func makeSlice(n int) []byte {
+	// If the make fails, give a known error.
+	defer func() {
+		if recover() != nil {
+			panic(ErrTooLarge)
+		}
+	}()
+	return make([]byte, n)
+}
+
+// $GOROOT/src/fmt/scan.go
+func (s *ss) Token(skipSpace bool, f func(rune) bool) (tok []byte, err error) {
+	defer func() {
+		if e := recover(); e != nil {
+			if se, ok := e.(scanError); ok {
+				err = se.err
+			} else {
+				panic(e)
+			}
+		}
+	}()
+	if f == nil {
+		f = notSpace
+	}
+	s.buf = s.buf[:0]
+	tok = s.token(skipSpace, f)
+	return
+}
+
+var mu sync.Mutex
+
+func BehaveWithDefer() {
+	fmt.Println("exec BehaveWithDefer")
+	mu.Lock()
+	defer mu.Unlock()
+	bizOp()
+}
+
 func main() {
-	showFileOperation2()
+	showFileOperation()
+	// showFileOperation2()
+	fmt.Println()
 }
 
 func copyMap(src map[int]string) map[int]string {

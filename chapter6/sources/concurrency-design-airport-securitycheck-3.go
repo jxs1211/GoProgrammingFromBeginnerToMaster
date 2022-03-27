@@ -45,7 +45,6 @@ func start(id string, f func(string) int, next chan<- struct{}) (chan<- struct{}
 				}
 			}
 		}
-
 	}()
 	return queue, quit, result
 }
@@ -90,7 +89,25 @@ func max(args ...int) int {
 	return n
 }
 
-func main() {
+func idCheck3(id string) int {
+	time.Sleep(time.Millisecond * time.Duration(idCheckTmCost))
+	print("\tgoroutine-", id, "-idCheck: idCheck ok\n")
+	return idCheckTmCost
+}
+
+func bodyCheck3(id string) int {
+	time.Sleep(time.Millisecond * time.Duration(bodyCheckTmCost))
+	print("\tgoroutine-", id, "-bodyCheck: bodyCheck ok\n")
+	return bodyCheckTmCost
+}
+
+func xRayCheck3(id string) int {
+	time.Sleep(time.Millisecond * time.Duration(xRayCheckTmCost))
+	print("\tgoroutine-", id, "-xRayCheck: xRayCheck ok\n")
+	return xRayCheckTmCost
+}
+
+func showConcurrency3() {
 	passengers := 30
 	queue := make(chan struct{}, 30)
 	newAirportSecurityCheckChannel("channel1", queue)
@@ -104,4 +121,72 @@ func main() {
 	time.Sleep(5 * time.Second)
 	close(queue) // 为了打印各通道的处理时长
 	time.Sleep(1000 * time.Second)
+}
+
+func start3(id string, f func(string) int, next chan struct{}) (sig chan struct{}, quit chan struct{}, data chan int) {
+	sig = make(chan struct{}, 10)
+	quit = make(chan struct{})
+	data = make(chan int)
+
+	go func() {
+		total := 0
+		for {
+			select {
+			case <-quit:
+				data <- total
+				return
+			case v := <-sig:
+				total += f(id)
+				if next != nil {
+					next <- v
+				}
+			}
+		}
+	}()
+	return sig, quit, data
+}
+
+func newAirportSecurityCheckChannel2(s string, sig chan struct{}) {
+	println("newAirportSecurityCheckChannel2 ready")
+	go func() {
+		sig3, quit1, data1 := start3(s, xRayCheck3, nil)
+		sig2, quit2, data2 := start3(s, bodyCheck3, sig3)
+		sig1, quit3, data3 := start3(s, idCheck3, sig2)
+		for {
+			v, ok := <-sig
+			if !ok {
+				close(quit1)
+				close(quit2)
+				close(quit3)
+				total := max(<-data1, <-data2, <-data3)
+				println("gouroutine: ", s, ", total: ", total)
+				println("gouroutine: ", s, ", closed")
+				return
+			}
+			sig1 <- v
+		}
+	}()
+}
+
+func showConcurrency33() {
+	passagers := 30
+	sig := make(chan struct{}, 30)
+	newAirportSecurityCheckChannel2("channel1", sig)
+	newAirportSecurityCheckChannel2("channel2", sig)
+	newAirportSecurityCheckChannel2("channel3", sig)
+
+	time.Sleep(5 * time.Second)
+	for i := 0; i < passagers; i++ {
+		sig <- struct{}{}
+	}
+	time.Sleep(5 * time.Second)
+	println("main done1")
+	close(sig)
+	time.Sleep(1000 * time.Second)
+	println("main done")
+}
+
+func main() {
+	// showConcurrency3()
+	showConcurrency33()
 }

@@ -8,8 +8,13 @@ func f() {
 	<-c
 }
 
-func main() {
+func showGoChanCase1() {
 	go f()
 	c <- 5
 	println(a)
+}
+
+func main() {
+	showGoChanCase1()
+
 }

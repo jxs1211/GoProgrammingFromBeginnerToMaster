@@ -20,16 +20,16 @@ func fooWithoutDefer() {
 	sum(10)
 }
 
-func BenchmarkFooWithDefer(b *testing.B) {
-	for i := 0; i < b.N; i++ {
-		fooWithDefer()
-	}
-}
-func BenchmarkFooWithoutDefer(b *testing.B) {
-	for i := 0; i < b.N; i++ {
-		fooWithoutDefer()
-	}
-}
+// func BenchmarkFooWithDefer(b *testing.B) {
+// 	for i := 0; i < b.N; i++ {
+// 		fooWithDefer()
+// 	}
+// }
+// func BenchmarkFooWithoutDefer(b *testing.B) {
+// 	for i := 0; i < b.N; i++ {
+// 		fooWithoutDefer()
+// 	}
+// }
 
 func forLoop() {
 	for i := 0; i < 100; i++ {
@@ -73,8 +73,8 @@ func BenchmarkFuncWithoutDefer(b *testing.B) {
 	}
 }
 
-func BenchmarkFuncWithPanicRecover(b *testing.B) {
-	for i := 0; i < b.N; i++ {
-		FuncWithPanicRecover()
-	}
-}
+// func BenchmarkFuncWithPanicRecover(b *testing.B) {
+// 	for i := 0; i < b.N; i++ {
+// 		FuncWithPanicRecover()
+// 	}
+// }
