@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"sync"
 	"time"
 )
@@ -48,24 +49,28 @@ func SequentialShutdown(waitTimeout time.Duration, shutdowners ...GracefullyShut
 	var left time.Duration
 	timer := time.NewTimer(waitTimeout)
 
-	for _, g := range shutdowners {
+	for i, g := range shutdowners {
 		elapsed := time.Since(start)
 		left = waitTimeout - elapsed
-
+		fmt.Printf("id: %d, left: %ds\n", i, left/time.Second)
 		c := make(chan struct{})
-		go func(shutdowner GracefullyShutdowner) {
+		go func(id int, shutdowner GracefullyShutdowner) {
+			begin := time.Now()
+			fmt.Printf("goroutine %d start, begin: %v\n", id, begin)
+			defer fmt.Printf("goroutine %d end\n", id)
 			shutdowner.Shutdown(left)
 			c <- struct{}{}
-		}(g)
+			fmt.Printf("goroutine %d cost: %ds\n", id, time.Since(begin)/time.Second)
+		}(i, g)
 
 		timer.Reset(left)
 		select {
 		case <-c:
 			//continue
 		case <-timer.C:
+			fmt.Println("timeout!")
 			return errors.New("wait timeout")
 		}
 	}
-
 	return nil
 }

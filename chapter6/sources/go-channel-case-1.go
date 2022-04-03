@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 var c = make(chan int)
 var a string
 
@@ -14,7 +16,27 @@ func showGoChanCase1() {
 	println(a)
 }
 
-func main() {
-	showGoChanCase1()
+func bar() <-chan int {
+	ch := make(chan int)
+	go func() {
+		fmt.Println("hello bar")
+		ch <- 1
+	}()
+	return ch
+}
 
+func showGoChanCase11() {
+	ch := bar()
+	v, ok := <-ch
+	if !ok {
+		fmt.Println("nothing received")
+		return
+	}
+	fmt.Println("receive: ", v)
+
+}
+
+func main() {
+	// showGoChanCase1()
+	showGoChanCase11()
 }
