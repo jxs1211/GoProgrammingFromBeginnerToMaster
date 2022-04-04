@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -14,8 +15,9 @@ type result struct {
 }
 
 func first(servers ...*httptest.Server) (result, error) {
-	c := make(chan result, len(servers))
+	c := make(chan result)
 	queryFunc := func(server *httptest.Server) {
+		defer fmt.Println("query done")
 		url := server.URL
 		resp, err := http.Get(url)
 		if err != nil {
@@ -35,7 +37,7 @@ func first(servers ...*httptest.Server) (result, error) {
 	select {
 	case r := <-c:
 		return r, nil
-	case <-time.After(500 * time.Millisecond):
+	case <-time.After(2 * time.Second):
 		return result{}, errors.New("timeout")
 	}
 }
@@ -49,7 +51,8 @@ func fakeWeatherServer(name string) *httptest.Server {
 }
 
 func main() {
-	result, err := first(fakeWeatherServer("open-weather-1"),
+	result, err := first(
+		fakeWeatherServer("open-weather-1"),
 		fakeWeatherServer("open-weather-2"),
 		fakeWeatherServer("open-weather-3"))
 	if err != nil {

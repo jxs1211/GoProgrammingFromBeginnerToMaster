@@ -75,7 +75,7 @@ func spawnGroup(name string, num int, f func(int) (int, bool), in <-chan int) <-
 	return groupOut
 }
 
-func main() {
+func showConcurrency9() {
 	in := newNumGenerator(1, 20)
 	out := spawnGroup("square", 2, square, spawnGroup("filterOdd", 3, filterOdd, in))
 
@@ -84,4 +84,78 @@ func main() {
 	for v := range out {
 		fmt.Println(v)
 	}
+}
+
+func ChannelNumsGenerator(start, count int) <-chan int {
+	out := make(chan int)
+	go func() {
+		for i := start; i <= count; i++ {
+			out <- i
+		}
+		close(out)
+	}()
+	return out
+}
+
+func chan2slice(chan int) []int {
+
+}
+
+func spawn91(name string, nums int, f func(i int) (int, bool), in <-chan int) <-chan int {
+	gOut := make(chan int)
+	// outSlice := make([]chan int, 0, nums)
+	var outSlice []chan int
+	var wg sync.WaitGroup
+	// fan out
+	// go func() {
+	for i := 0; i < nums; i++ {
+		out := make(chan int)
+		go func(id int) {
+			defer fmt.Printf("%s: fan out goroutine-%d done\n", name, id)
+			for v := range in {
+				v1, ok := f(v)
+				if ok {
+					out <- v1
+				}
+			}
+			close(out)
+		}(i)
+		outSlice = append(outSlice, out)
+		// outSlice[i] = out
+	}
+	// }()
+	// fan in
+	go func() {
+		for i, out := range outSlice {
+			wg.Add(1)
+			go func(id int) {
+				defer func() {
+					wg.Done()
+					fmt.Printf("%s: fan in goroutinue-%d done\n", name, id)
+				}()
+				for v := range out {
+					gOut <- v
+				}
+			}(i)
+		}
+		wg.Wait()
+		close(gOut)
+	}()
+
+	return gOut
+}
+
+func showConcurrency91() {
+	in := ChannelNumsGenerator(1, 20)
+	out := spawn91("square", 2, square, spawn91("filterOdd", 3, filterOdd, in))
+
+	for v := range out {
+		fmt.Println(v)
+	}
+
+}
+
+func main() {
+	// showConcurrency9()
+	showConcurrency91()
 }
