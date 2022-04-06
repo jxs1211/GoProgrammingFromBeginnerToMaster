@@ -22,9 +22,13 @@ func main() {
 	var ok1, ok2 bool
 	for {
 		select {
-		case x := <-c1:
-			ok1 = true
-			fmt.Println(x)
+		case x, ok := <-c1:
+			if !ok {
+				c1 = nil
+			} else {
+				ok1 = true
+				fmt.Println(x)
+			}
 		case x := <-c2:
 			ok2 = true
 			fmt.Println(x)
@@ -35,4 +39,5 @@ func main() {
 		}
 	}
 	fmt.Println("program end")
+	time.Sleep
 }

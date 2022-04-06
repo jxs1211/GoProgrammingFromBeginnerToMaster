@@ -45,13 +45,37 @@ func Increase2() int {
 	return counter2.i
 }
 
+type ctr struct {
+	i int
+	c chan int
+}
+
+var counter3 ctr
+
+func Increase3() int {
+	return <-counter3.c
+}
+
+func init() {
+	counter3 = ctr{
+		c: make(chan int),
+	}
+	go func() {
+		for i := 0; i < 8; i++ {
+			counter3.i++
+			counter3.c <- counter3.i
+		}
+	}()
+}
+
 func showChanCase52() {
 	for i := 0; i < 10; i++ {
-		go func(id int) {
-			v := Increase2()
-			fmt.Printf("goroutine %d: increase done: %d\n", id, v)
+		go func(i int) {
+			v := Increase3()
+			fmt.Printf("goroutine-%d: receive: %d\n", i, v)
 		}(i)
 	}
+	// send()
 }
 
 func main() {

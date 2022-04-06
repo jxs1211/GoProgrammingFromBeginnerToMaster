@@ -65,7 +65,8 @@ func fakeWeatherServer(name string, interval int) *httptest.Server {
 }
 
 func main() {
-	result, err := first(fakeWeatherServer("open-weather-1", 200),
+	result, err := first(
+		fakeWeatherServer("open-weather-1", 200),
 		fakeWeatherServer("open-weather-2", 1000),
 		fakeWeatherServer("open-weather-3", 600))
 	if err != nil {
@@ -74,5 +75,5 @@ func main() {
 	}
 
 	fmt.Println(result)
-	time.Sleep(10 * time.Second)
+	time.Sleep(2 * time.Second)
 }

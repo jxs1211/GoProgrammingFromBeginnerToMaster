@@ -1,3 +1,19 @@
+scp -r -i ~/.ssh/id_rsa ./* going@192.168.40.136:/home/going/workspace/GoProgrammingFromBeginnerToMaster
+
+```
+#累计打卡 #第57天
+
+#打卡时间 #2022-4-4
+
+#打卡人 Shen Xianjie
+
+#打卡内容：
+
+(1)二刷Go语言精进之路1
+33.2　Go常见的并发模式317
+```
+
+
 ```
 #累计打卡 #第56天
 
