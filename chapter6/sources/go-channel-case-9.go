@@ -39,5 +39,4 @@ func main() {
 		}
 	}
 	fmt.Println("program end")
-	time.Sleep
 }

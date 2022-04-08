@@ -28,7 +28,7 @@ func GetInstance(id int) *Foo {
 	return instance
 }
 
-func main() {
+func showOnceDo() {
 	var wg sync.WaitGroup
 	for i := 0; i < 5; i++ {
 		wg.Add(1)
@@ -44,4 +44,50 @@ func main() {
 
 	wg.Wait()
 	log.Printf("all goroutines exit\n")
+}
+
+type inst struct {
+}
+
+var ist *inst
+
+// var instance *Foo
+var once2 sync.Once
+
+func getInst(id int) *inst {
+	log.Printf("goroutine-%d: enter getInst", id)
+	defer func() {
+		if p := recover(); p != nil {
+			log.Println("caught a panic: ", p)
+		}
+	}()
+	once2.Do(func() {
+		ist = &inst{}
+		log.Printf("goroutine-%d: getInst: %p\n", id, ist)
+		panic("raise a panic")
+	})
+	return ist
+}
+
+func showOnceDo2() {
+	var wg sync.WaitGroup
+	for i := 0; i < 5; i++ {
+		wg.Add(1)
+		go func(id int) {
+			defer wg.Done()
+			ist := getInst(id)
+			log.Printf("goroutine-%d: instance: %+v %p\n", id, ist, ist)
+		}(i + 1)
+	}
+	time.Sleep(5 * time.Second)
+	ist := getInst(0)
+	log.Printf("goroutine-%d: get instance: %p\n", 0, ist)
+
+	wg.Wait()
+	log.Println("done")
+}
+
+func main() {
+	// showOnceDo()
+	showOnceDo2()
 }

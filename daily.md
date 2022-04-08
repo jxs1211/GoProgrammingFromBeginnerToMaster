@@ -1,6 +1,19 @@
 scp -r -i ~/.ssh/id_rsa ./* going@192.168.40.136:/home/going/workspace/GoProgrammingFromBeginnerToMaster
 
 ```
+#累计打卡 #第58天
+
+#打卡时间 #2022-4-7
+
+#打卡人 Shen Xianjie
+
+#打卡内容：
+
+(1)二刷Go语言精进之路1
+第35条　了解sync包的正确用法359
+```
+
+```
 #累计打卡 #第57天
 
 #打卡时间 #2022-4-4

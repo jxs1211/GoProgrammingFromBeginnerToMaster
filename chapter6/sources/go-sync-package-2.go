@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"sync"
 	"time"
@@ -11,7 +12,7 @@ type foo struct {
 	sync.Mutex
 }
 
-func main() {
+func CopySyncType() {
 	f := foo{n: 17}
 
 	go func(f foo) {
@@ -43,4 +44,46 @@ func main() {
 	time.Sleep(1000 * time.Second)
 	f.Unlock()
 	log.Println("g1: unlock foo ok")
+}
+
+type clock struct {
+	i int
+	sync.Mutex
+}
+
+func CopySyncType2() {
+	s := clock{i: 1}
+
+	go func(c clock) {
+		for {
+			fmt.Println("g1 try lock...")
+			c.Lock()
+			fmt.Println("g1 lock")
+			time.Sleep(3 * time.Second)
+			c.Unlock()
+			fmt.Println("g1 unlock")
+		}
+	}(s)
+
+	s.Lock()
+	fmt.Println("g0 lock")
+	go func(c clock) {
+		for {
+			fmt.Println("g2 try lock...")
+			c.Lock()
+			fmt.Println("g2 lock")
+			time.Sleep(5 * time.Second)
+			c.Unlock()
+			fmt.Println("g2 unlock")
+		}
+	}(s)
+
+	time.Sleep(1000 * time.Second)
+	s.Unlock()
+	fmt.Println("g0 unlock")
+}
+
+func main() {
+	// CopySyncType()
+	CopySyncType2()
 }

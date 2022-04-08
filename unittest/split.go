@@ -30,11 +30,13 @@ type Learner interface {
 	Speaker(s string) string
 }
 
+type Student struct{}
+
 func (s *Student) Learn() {
 	panic("not implemented") // TODO: Implement
 }
 
-func (s *Student) Speaker(s string) string {
+func (s *Student) Speaker(str string) string {
 	panic("not implemented") // TODO: Implement
 }
 
@@ -45,4 +47,8 @@ func ExtractFuncTest(a, b, c int) {
 	}
 	if c > 0 {
 	}
+}
+
+func multiply(a, b int) int {
+	return a * b
 }

@@ -5,37 +5,67 @@ import (
 	"testing"
 )
 
-var cs1 = 0 // 模拟临界区要保护的数据
-var mu1 sync.Mutex
-var cs2 = 0 // 模拟临界区要保护的数据
-var mu2 sync.RWMutex
+var data1 int
+var mut1 sync.Mutex
+var data2 int
+var mut2 sync.RWMutex
 
-func BenchmarkReadSyncByMutex(b *testing.B) {
-	b.RunParallel(func(pb *testing.PB) {
-		for pb.Next() {
-			mu1.Lock()
-			_ = cs1
-			mu1.Unlock()
+func BenchmarkSyncReadByMutex(b *testing.B) {
+	b.RunParallel(func(b *testing.PB) {
+		for b.Next() {
+			mut1.Lock()
+			_ = data1
+			mut1.Unlock()
 		}
 	})
 }
 
-func BenchmarkReadSyncByRWMutex(b *testing.B) {
-	b.RunParallel(func(pb *testing.PB) {
-		for pb.Next() {
-			mu2.RLock()
-			_ = cs2
-			mu2.RUnlock()
+func BenchmarkSyncReadByRWMutexRLock(b *testing.B) {
+	b.RunParallel(func(b *testing.PB) {
+		for b.Next() {
+			mut2.RLock()
+			_ = data1
+			mut2.RUnlock()
 		}
 	})
 }
 
-func BenchmarkWriteSyncByRWMutex(b *testing.B) {
-	b.RunParallel(func(pb *testing.PB) {
-		for pb.Next() {
-			mu2.Lock()
-			cs2++
-			mu2.Unlock()
+func BenchmarkSyncReadByRWMutexLock(b *testing.B) {
+	b.RunParallel(func(b *testing.PB) {
+		for b.Next() {
+			mut2.Lock()
+			_ = data1
+			mut2.Unlock()
+		}
+	})
+}
+
+func BenchmarkSyncWriteByMutex(b *testing.B) {
+	b.RunParallel(func(b *testing.PB) {
+		for b.Next() {
+			mut1.Lock()
+			data1++
+			mut1.Unlock()
+		}
+	})
+}
+
+func BenchmarkSyncWriteByRWMutexRLock(b *testing.B) {
+	b.RunParallel(func(b *testing.PB) {
+		for b.Next() {
+			mut2.RLock()
+			data1++
+			mut2.RUnlock()
+		}
+	})
+}
+
+func BenchmarkSyncWriteByRWMutexLock(b *testing.B) {
+	b.RunParallel(func(b *testing.PB) {
+		for b.Next() {
+			mut2.Lock()
+			data1++
+			mut2.Unlock()
 		}
 	})
 }

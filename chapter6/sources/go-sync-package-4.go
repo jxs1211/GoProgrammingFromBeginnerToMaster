@@ -46,7 +46,7 @@ func spawnGroup(f func(i int), num int, mu *sync.Mutex) <-chan signal {
 	return c
 }
 
-func main() {
+func showSyncPkg1() {
 	fmt.Println("start a group of workers...")
 	mu := &sync.Mutex{}
 	c := spawnGroup(worker, 5, mu)
@@ -60,4 +60,72 @@ func main() {
 
 	<-c
 	fmt.Println("the group of workers work done!")
+
+}
+
+func work(duration int) {
+	fmt.Println("worker start")
+	time.Sleep(time.Millisecond * time.Duration(duration))
+	fmt.Println("worker end")
+}
+
+var ready2 bool
+var mutex sync.Mutex
+
+func spawnGoroutine(f func(i int), nums int, cond *sync.Cond) <-chan struct{} {
+	done := make(chan struct{})
+	var wg sync.WaitGroup
+	for i := 0; i < nums; i++ {
+		wg.Add(1)
+		go func(i int) {
+			defer wg.Done()
+			cond.L.Lock()
+			if !ready2 {
+				cond.Wait()
+			}
+			cond.L.Unlock()
+			f(i)
+			// for {
+			// 	mu.Lock()
+			// 	if !ready2 {
+			// 		mu.Unlock()
+			// 		// fmt.Printf("goroutine-%d: not ready..", i)
+			// 		time.Sleep(time.Second)
+			// 		continue
+			// 	}
+			// 	mu.Unlock()
+			// 	f(i)
+			// 	return
+			// }
+		}(i)
+	}
+
+	go func() {
+		wg.Wait()
+		done <- struct{}{}
+	}()
+
+	return done
+}
+
+func showSyncPkg2() {
+	// mu := &sync.Mutex{}
+	cond := sync.NewCond(&sync.Mutex{})
+	c := spawnGoroutine(work, 5, cond)
+	fmt.Println("exec group workers")
+	time.Sleep(5 * time.Second)
+
+	cond.L.Lock()
+	ready2 = true
+	cond.Broadcast()
+	fmt.Println("trigger worker")
+	cond.L.Unlock()
+
+	<-c
+	fmt.Println("all worker done")
+}
+
+func main() {
+	// showSyncPkg1()
+	showSyncPkg2()
 }
