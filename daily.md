@@ -1,5 +1,19 @@
 scp -r -i ~/.ssh/id_rsa ./* going@192.168.40.136:/home/going/workspace/GoProgrammingFromBeginnerToMaster
 
+
+```
+#累计打卡 #第59天
+
+#打卡时间 #2022-4-8
+
+#打卡人 Shen Xianjie
+
+#打卡内容：
+
+(1)二刷Go语言精进之路2
+第40条　理解包内测试与包外测试的差别.md
+```
+
 ```
 #累计打卡 #第58天
 
